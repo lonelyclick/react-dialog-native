@@ -1,0 +1,10 @@
+@import 'normalize.css';
+@import './core/scaffolding.css';
+
+*:not(input):not(textarea),
+*::before,
+*::after {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
