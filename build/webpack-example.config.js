@@ -8,47 +8,20 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
   entry: {
-    'react-dialog-native': './src/components/Dialog.js',
+    'app': './src/example/index.js',
   },
 
   output: {
     filename: '[name].js',
-    path: path.resolve('./dist/'),
+    path: path.resolve('./example_dist/'),
     publicPath: '/',
   },
 
   output: {
     filename: '[name].js',
-    path: path.resolve('./dist/'),
-    library: 'ReactDialogNative',
-    libraryTarget: 'umd'
+    path: path.resolve('./example_dist/'),
   },
-  externals: {
-    'react': {
-      'commonjs': 'react',
-      'commonjs2': 'react',
-      'amd': 'react',
-      'root': 'React'
-    },
-    'react-dom': {
-      'commonjs': 'react-dom',
-      'commonjs2': 'react-dom',
-      'amd': 'react-dom',
-      'root': 'ReactDOM'
-    },
-    'prop-types': {
-      'commonjs': 'prop-types',
-      'commonjs2': 'prop-types',
-      'amd': 'prop-types',
-      'root': 'PropTypes',
-    },
-    'dialog-polyfill': {
-      'commonjs': 'dialog-polyfill',
-      'commonjs2': 'dialog-polyfill',
-      'amd': 'dialog-polyfill',
-      'root': 'dialogPolyfill',
-    },
-  },
+
   resolve: {
     extensions: ['.js', '.mjs', '.json'],
     alias: {
@@ -62,7 +35,7 @@ const config = {
         test: /\.(js)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        exclude: /node_modules/,
+        exclude: /node_modules|\/dist/,
         options: {
           cache: false,
           fix: false,
@@ -72,6 +45,26 @@ const config = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10240,
+          name: '[name].[ext]?[hash]',
+        },
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: 'fonts/[name].[hash:7].[ext]',
+        },
+      },
+      {
+        test: /\.svg/,
+        loader: 'svg-loader',
       },
       isProd ? {
         test: /\.css$/,
@@ -87,14 +80,42 @@ const config = {
   },
 
   plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Meipu Misc',
+      template: path.resolve(__dirname, '../index.template.ejs'),
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
   ],
+
+  devServer: {
+    contentBase: path.join(__dirname, '../example_dist'),
+    compress: false,
+    port: 8888,
+    historyApiFallback: true,
+    hot: true,
+    noInfo: false,
+    host: '0.0.0.0',
+  },
 };
 
 if (isProd) {
+  config.plugins.push(new WebpackMd5Hash());
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false,
+      screw_ie8: true,
+    },
+    comments: false,
+    sourceMap: false,
+  }));
   config.plugins.push(new ExtractTextPlugin(`[name].css`));
+  config.plugins.push(new webpack.LoaderOptionsPlugin({
+    minimize: true,
+  }));
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = config;

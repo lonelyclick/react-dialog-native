@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
 import dialogPolyfill from 'dialog-polyfill';
 
 import './Dialog.css';
@@ -8,7 +7,7 @@ import './Dialog.css';
 class Dialog extends Component {
   static propTypes = {
     open: PropTypes.bool,
-    className: PropTypes.string.isRequired,
+    className: PropTypes.string,
     children: PropTypes.node.isRequired,
     closeBackdropOnClick: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
@@ -17,6 +16,7 @@ class Dialog extends Component {
   static defaultProps = {
     open: false,
     closeBackdropOnClick: true,
+    className: '',
   };
 
   componentDidMount() {
@@ -33,7 +33,7 @@ class Dialog extends Component {
   handleModal(open) {
     if (open) {
       this.dialogRef.showModal();
-    } else {
+    } else if (this.dialogRef.getAttribute('open') !== null) {
       this.dialogRef.close();
     }
   }
@@ -57,7 +57,7 @@ class Dialog extends Component {
 
     return (
       <dialog
-        className={cx('Dialog', className)}
+        className={`Dialog ${className}`}
         ref={(dialog) => { this.dialogRef = dialog; }}
         onClick={this.handleClickDialog}
       >

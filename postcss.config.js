@@ -6,9 +6,6 @@ const plugins = [
   }),
   require('postcss-nested')(),
   require('postcss-import')(),
-  require('postcss-simple-vars')({
-    variables: require('./src/styles/variables'),
-  }),
 ];
 
 if (process.env.NODE_ENV !== 'production') {
