@@ -10,10 +10,13 @@ class Dialog extends Component {
     open: PropTypes.bool,
     className: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
+    closeBackdropOnClick: PropTypes.bool,
+    onClose: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     open: false,
+    closeBackdropOnClick: true,
   };
 
   componentDidMount() {
@@ -35,6 +38,20 @@ class Dialog extends Component {
     }
   }
 
+  handleClickDialog = (event) => {
+    const { closeBackdropOnClick, onClose } = this.props;
+    if (!closeBackdropOnClick) return;
+    const rect = event.target.getBoundingClientRect();
+    const inDialog = rect.top <= event.clientY
+      && event.clientY <= rect.top + rect.height
+      && rect.left <= event.clientX
+      && event.clientX <= rect.left + rect.width;
+
+    if (!inDialog) {
+      onClose();
+    }
+  }
+
   render() {
     const { className, children } = this.props;
 
@@ -42,6 +59,7 @@ class Dialog extends Component {
       <dialog
         className={cx('Dialog', className)}
         ref={(dialog) => { this.dialogRef = dialog; }}
+        onClick={this.handleClickDialog}
       >
         {children}
       </dialog>

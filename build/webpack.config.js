@@ -91,6 +91,7 @@ const config = {
     historyApiFallback: true,
     hot: true,
     noInfo: false,
+    host: '0.0.0.0',
   },
 };
 

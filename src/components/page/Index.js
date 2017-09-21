@@ -34,10 +34,15 @@ class Index extends Component {
 
     return (
       <div>
-        <Dialog open={dialogOpen} className="Index-dialog">
+        {user.ids.map((id, index) => (<div key={`todo-${index}`}>Hello, {user.entities[id].name}</div>))}
+        <Dialog
+          open={dialogOpen}
+          className="Index-dialog"
+          onClose={this.handleCloseDialog}
+          closeBackdropOnClick
+        >
           <button onClick={this.handleCloseDialog} id="close">Close</button>
         </Dialog>
-        {user.ids.map((id, index) => (<div key={`todo-${index}`}>Hello, {user.entities[id].name}</div>))}
       </div>
     );
   }

@@ -28,5 +28,6 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     'react/forbid-prop-types': 0,
     'react/no-array-index-key': 0,
+    'jsx-a11y/no-noninteractive-element-interactions': 0,
   }
 }
