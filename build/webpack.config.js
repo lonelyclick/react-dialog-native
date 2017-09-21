@@ -13,6 +13,7 @@ const config = {
   output: {
     filename: 'bundle.js',
     path: path.resolve('./dist/'),
+    publicPath: '/',
   },
 
   resolve: {
@@ -77,13 +78,15 @@ const config = {
       title: 'Meipu Misc',
       template: path.resolve(__dirname, '../index.template.ejs'),
     }),
+    new webpack.HotModuleReplacementPlugin(),
   ],
 
   devServer: {
     contentBase: path.join(__dirname, "../dist"),
-    compress: true,
+    compress: false,
     port: 8888,
     historyApiFallback: true,
+    hot: true,
   },
 };
 

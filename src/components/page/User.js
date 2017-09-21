@@ -4,19 +4,18 @@ import { connect } from 'react-redux';
 
 import { actions as userActions } from '@/store/modules/user';
 
-class Index extends Component {
+class User extends Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
     getUsers: PropTypes.func.isRequired,
-    // addUser: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
-    // this.props.addUser({
-    //   id: 1,
-    //   name: 'hhaa',
-    // });
     this.props.getUsers();
+    // console.log(this.props.params);
+    const { params: { id } } = this.props;
+    console.log('current id is ', id);
   }
 
   render() {
@@ -33,4 +32,4 @@ class Index extends Component {
 export default connect(
   ({ user }) => ({ user }),
   { ...userActions },
-)(Index);
+)(User);

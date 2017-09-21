@@ -3,11 +3,14 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 
 import store from '@/store';
-import App from '@/components/App';
+import Router from '@/components/Router';
+import initAxios from '@/axios';
+
+initAxios();
 
 render(
   <Provider store={store}>
-    <App />
+    <Router />
   </Provider>,
   document.getElementById('root'),
 );
