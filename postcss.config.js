@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies, global-require */
+
 const plugins = [
   require('autoprefixer')({
     browsers: ['last 3 versions', 'ios >= 8'],
@@ -19,3 +21,5 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = {
   plugins,
 };
+
+/* eslint-enable import/no-extraneous-dependencies, global-require */

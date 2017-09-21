@@ -13,9 +13,8 @@ class User extends Component {
 
   componentDidMount() {
     this.props.getUsers();
-    // console.log(this.props.params);
     const { params: { id } } = this.props;
-    console.log('current id is ', id);
+    this.props.getUsers(id);
   }
 
   render() {

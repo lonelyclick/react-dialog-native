@@ -1,0 +1,25 @@
+cache:
+  key: misc
+  paths:
+    - node_modules/
+
+before_script:
+  - node -v
+  - npm -v
+  - npm config set registry http://npm.meitu-inc.com
+  - npm install
+  - npm run eslint
+  - npm run stylelint
+  - npm run build
+
+build_master:
+  only:
+    - master
+  script:
+    - echo 'build success'
+
+build_not_master:
+  except:
+    - master
+  script:
+    - echo 'build success'

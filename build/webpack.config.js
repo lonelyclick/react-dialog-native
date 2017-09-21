@@ -2,16 +2,17 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
 
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
   entry: {
-    'app': './src/index.js',
+    app: './src/index.js',
   },
 
   output: {
-    filename: 'bundle.js',
+    filename: isProd ? '[name].[chunkhash].js' : '[name].js',
     path: path.resolve('./dist/'),
     publicPath: '/',
   },
@@ -78,16 +79,37 @@ const config = {
       title: 'Meipu Misc',
       template: path.resolve(__dirname, '../index.template.ejs'),
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    }),
   ],
 
   devServer: {
-    contentBase: path.join(__dirname, "../dist"),
+    contentBase: path.join(__dirname, '../dist'),
     compress: false,
     port: 8888,
     historyApiFallback: true,
     hot: true,
+    noInfo: false,
   },
 };
+
+if (isProd) {
+  config.plugins.push(new WebpackMd5Hash());
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false,
+      screw_ie8: true,
+    },
+    comments: false,
+    sourceMap: false,
+  }));
+  config.plugins.push(new ExtractTextPlugin(`[name].[chunkhash].css`));
+  config.plugins.push(new webpack.LoaderOptionsPlugin({
+    minimize: true,
+  }));
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
 
 module.exports = config;
